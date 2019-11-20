@@ -68,8 +68,8 @@ setuptools.setup(
                     "Topic :: Scientific/Engineering",
                 ],
                 install_requires=REQUIREMENTS,
-                include_package_data=True,
                 keywords="qiskit jupyter quantum widgets",
+                include_package_data=True,
                 zip_safe=False
 )
 SAVING = """\

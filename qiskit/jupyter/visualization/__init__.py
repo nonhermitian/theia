@@ -12,4 +12,4 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-from .counts_visualization import iplot_histgram
+from .counts_visualization import iplot_histogram

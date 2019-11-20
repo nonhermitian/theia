@@ -22,9 +22,9 @@ import plotly.graph_objects as go
 from .plotly_wrapper import PlotlyFigureWrapper
 
 
-def iplot_histgram(data, figsize=(None, None), color=None, number_to_keep=None,
-                   sort='asc', target_string=None,
-                   legend=None, bar_labels=True, title=None):
+def iplot_histogram(data, figsize=(None, None), color=None, number_to_keep=None,
+                    sort='asc', target_string=None,
+                    legend=None, bar_labels=True, title=None):
     """Interactive histogram plot of counts data.
 
     Args:
