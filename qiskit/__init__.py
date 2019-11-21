@@ -11,16 +11,3 @@
 # Any modifications or derivative works of this code must retain this
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
-
-"""
-====================================================
-Qiskit Interactive Tools (:mod:`qiskit.interactive`)
-====================================================
-
-.. currentmodule:: qiskit.interative
-
-A Collection of interative tools
-that extend the functionality of Qiskit.
-
-"""
-from .version import __version__

@@ -12,12 +12,12 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
+"""Interactive histogram from experiment counts"""
+
 import functools
 import numpy as np
 from qiskit.visualization.counts_visualization import (_plot_histogram_data,
-                                                       hamming_distance,
                                                        VALID_SORTS, DIST_MEAS)
-from qiskit.visualization.exceptions import VisualizationError
 import plotly.graph_objects as go
 from .plotly_wrapper import PlotlyFigure
 
@@ -45,13 +45,13 @@ def iplot_histogram(data, figsize=(None, None), color=None,
         title (str): A string to use for the plot title.
         background_color (str): Set the background color to 'white'
                                 or 'black'.
-    
+
     Returns:
         PlotlyFigureWrapper:
             A figure for the rendered histogram.
 
     Raises:
-        VisualizationError: When legend is provided and the length doesn't
+        ValueError: When legend is provided and the length doesn't
             match the input data.
 
     Example:
@@ -70,27 +70,27 @@ def iplot_histogram(data, figsize=(None, None), color=None,
            job = execute(qc, backend)
            iplot_histogram(job.result().get_counts())
     """
-    
+
     if sort not in VALID_SORTS:
-        raise VisualizationError("Value of sort option, %s, isn't a "
-                                 "valid choice. Must be 'asc', "
-                                 "'desc', or 'hamming'")
+        raise ValueError("Value of sort option, %s, isn't a "
+                         "valid choice. Must be 'asc', "
+                         "'desc', or 'hamming'")
     if sort in DIST_MEAS.keys() and target_string is None:
         err_msg = 'Must define target_string when using distance measure.'
-        raise VisualizationError(err_msg)
+        raise ValueError(err_msg)
 
     if isinstance(data, dict):
         data = [data]
 
     if legend and len(legend) != len(data):
-        raise VisualizationError("Length of legendL (%s) doesn't match "
-                                 "number of input executions: %s" %
-                                 (len(legend), len(data)))
+        raise ValueError("Length of legendL (%s) doesn't match "
+                         "number of input executions: %s" %
+                         (len(legend), len(data)))
 
     if background_color == 'white':
-        text_color ='black'
+        text_color = 'black'
     elif background_color == 'black':
-        text_color ='white'
+        text_color = 'white'
     else:
         raise ValueError('Invalid background_color selection.')
 
@@ -118,7 +118,7 @@ def iplot_histogram(data, figsize=(None, None), color=None,
     labels_dict, all_pvalues, _ = _plot_histogram_data(data,
                                                        labels,
                                                        number_to_keep)
-    
+
     fig = go.Figure()
     for item, _ in enumerate(data):
         xvals = []
@@ -126,48 +126,47 @@ def iplot_histogram(data, figsize=(None, None), color=None,
         for idx, val in enumerate(all_pvalues[item]):
             xvals.append(idx+item*width)
             yvals.append(val)
-        
+
         labels = list(labels_dict.keys())
         hover_template = "<b>{x}</b><br>P = {y}"
         hover_text = [hover_template.format(x=labels[kk],
-                                            y=np.round(yvals[kk],3)) for kk in range(len(yvals))]
-        
-        fig.add_trace(go.Bar(
-                    x=xvals,
-                    y=yvals,
-                    width=width,
-                    hoverinfo="text",
-                    hovertext=hover_text,
-                    marker_color=color[item % len(color)],
-                    name=legend[item] if legend else '',
-                    text=np.round(yvals, 3) if bar_labels else None,
-                    textposition='auto'
-                                )
+                                            y=np.round(yvals[kk], 3)) for kk in range(len(yvals))]
+
+        fig.add_trace(go.Bar(x=xvals,
+                             y=yvals,
+                             width=width,
+                             hoverinfo="text",
+                             hovertext=hover_text,
+                             marker_color=color[item % len(color)],
+                             name=legend[item] if legend else '',
+                             text=np.round(yvals, 3) if bar_labels else None,
+                             textposition='auto'
+                            )
                      )
-    
+
     fig.update_xaxes(tickvals=list(range(len(labels_dict.keys()))),
                      ticktext=list(labels_dict.keys()),
                      tickfont_size=14,
                      showline=True, linewidth=1,
                      linecolor=text_color if text_color is 'white' else None,
                      )
-    
+
     fig.update_yaxes(title='Probability',
                      titlefont_size=18,
                      tickfont_size=14,
                      showline=True, linewidth=1,
                      linecolor=text_color if text_color is 'white' else None,
                     )
-    
+
     fig.update_layout(xaxis_tickangle=-70,
                       showlegend=(legend is not None),
                       width=figsize[0],
                       height=figsize[1],
                       paper_bgcolor=background_color,
-                      margin = dict(t=40, l=50, r=10, b=10),
+                      margin=dict(t=40, l=50, r=10, b=10),
                       title=dict(text=title, x=0.5),
                       title_font_size=20,
                       font=dict(color=text_color),
                      )
-    
+
     return PlotlyFigure(fig)
