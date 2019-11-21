@@ -22,9 +22,11 @@ import plotly.graph_objects as go
 from .plotly_wrapper import PlotlyFigure
 
 
-def iplot_histogram(data, figsize=(None, None), color=None, number_to_keep=None,
+def iplot_histogram(data, figsize=(None, None), color=None,
+                    number_to_keep=None,
                     sort='asc', target_string=None,
-                    legend=None, bar_labels=True, title=None):
+                    legend=None, bar_labels=True,
+                    title=None, background_color='white'):
     """Interactive histogram plot of counts data.
 
     Args:
@@ -41,7 +43,9 @@ def iplot_histogram(data, figsize=(None, None), color=None, number_to_keep=None,
             list or 1 if it's a dict)
         bar_labels (bool): Label each bar in histogram with probability value.
         title (str): A string to use for the plot title.
-
+        background_color (str): Set the background color to 'white'
+                                or 'black'.
+    
     Returns:
         PlotlyFigureWrapper:
             A figure for the rendered histogram.
@@ -82,6 +86,13 @@ def iplot_histogram(data, figsize=(None, None), color=None, number_to_keep=None,
         raise VisualizationError("Length of legendL (%s) doesn't match "
                                  "number of input executions: %s" %
                                  (len(legend), len(data)))
+
+    if background_color == 'white':
+        text_color ='black'
+    elif background_color == 'black':
+        text_color ='white'
+    else:
+        raise ValueError('Invalid background_color selection.')
 
     labels = list(sorted(
         functools.reduce(lambda x, y: x.union(y.keys()), data, set())))
@@ -136,20 +147,27 @@ def iplot_histogram(data, figsize=(None, None), color=None, number_to_keep=None,
     
     fig.update_xaxes(tickvals=list(range(len(labels_dict.keys()))),
                      ticktext=list(labels_dict.keys()),
-                     tickfont_size=14)
+                     tickfont_size=14,
+                     showline=True, linewidth=1,
+                     linecolor=text_color if text_color is 'white' else None,
+                     )
     
     fig.update_yaxes(title='Probability',
                      titlefont_size=18,
                      tickfont_size=14,
+                     showline=True, linewidth=1,
+                     linecolor=text_color if text_color is 'white' else None,
                     )
     
     fig.update_layout(xaxis_tickangle=-70,
                       showlegend=(legend is not None),
                       width=figsize[0],
                       height=figsize[1],
+                      paper_bgcolor=background_color,
                       margin = dict(t=40, l=50, r=10, b=10),
                       title=dict(text=title, x=0.5),
                       title_font_size=20,
+                      font=dict(color=text_color),
                      )
     
     return PlotlyFigure(fig)
