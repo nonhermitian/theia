@@ -58,7 +58,7 @@ def iplot_histogram(data, figsize=(None, None), color=None,
         .. jupyter-execute::
 
            from qiskit import QuantumCircuit, BasicAer, execute
-           from qiskit.interactive.visualization import iplot_histogram
+           from theia.visualization import iplot_histogram
            %matplotlib inline
 
            qc = QuantumCircuit(2, 2)

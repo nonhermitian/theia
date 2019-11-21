@@ -37,20 +37,19 @@ REQUIREMENTS = [
 
 version_path = os.path.abspath(
     os.path.join(
-        os.path.join(
-            os.path.join(os.path.dirname(__file__), 'qiskit'), 'interactive'),
-        'VERSION.txt'))
+            os.path.join(os.path.dirname(__file__), 'theia',
+        'VERSION.txt')))
 with open(version_path, 'r') as fd:
     VERSION = fd.read().rstrip()
 
 setuptools.setup(
-                name='qiskit-interactive',
+                name='theia',
                 version=VERSION,
                 packages=setuptools.find_namespace_packages(exclude=['test*']),
                 cmake_source_dir='.',
-                description="Qiskit Interative - Interactive elements for Quantum Computing",
+                description="Theia - Interactive elements for Qiskit",
                 url="",
-                author="Qiskit-Interactive Development Team",
+                author="Theia Development Team",
                 author_email="qiskit@us.ibm.com",
                 license="Apache 2.0",
                 classifiers=[
