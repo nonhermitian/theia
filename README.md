@@ -1,2 +1,2 @@
-# qiskit-jupyter
-Qiskit Jupyter tools
+# qiskit-interactive
+Interactive Jupyter tools for Qiskit
