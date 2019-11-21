@@ -12,7 +12,7 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-class PlotlyFigureWrapper():
+class PlotlyFigure():
     """A simple wrapper around Plotly Figure class.
     
     Allows the figures to be more or less drop in replacements

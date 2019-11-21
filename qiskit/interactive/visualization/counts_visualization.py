@@ -19,7 +19,7 @@ from qiskit.visualization.counts_visualization import (_plot_histogram_data,
                                                        VALID_SORTS, DIST_MEAS)
 from qiskit.visualization.exceptions import VisualizationError
 import plotly.graph_objects as go
-from .plotly_wrapper import PlotlyFigureWrapper
+from .plotly_wrapper import PlotlyFigure
 
 
 def iplot_histogram(data, figsize=(None, None), color=None, number_to_keep=None,
@@ -152,4 +152,4 @@ def iplot_histogram(data, figsize=(None, None), color=None, number_to_keep=None,
                       title_font_size=20,
                      )
     
-    return PlotlyFigureWrapper(fig)
+    return PlotlyFigure(fig)

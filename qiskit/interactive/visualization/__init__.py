@@ -13,3 +13,4 @@
 # that they have been altered from the originals.
 
 from .counts_visualization import iplot_histogram
+from .error_map import iplot_error_map
