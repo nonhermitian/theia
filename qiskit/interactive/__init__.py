@@ -13,11 +13,11 @@
 # that they have been altered from the originals.
 
 """
-=====================================
-Jupyter Tools (:mod:`qiskit.jupyter`)
-=====================================
+=========================================
+Jupyter Tools (:mod:`qiskit.interactive`)
+=========================================
 
-.. currentmodule:: qiskit.jupyter
+.. currentmodule:: qiskit.interative
 
 A Collection of Jupyter magic functions and tools
 that extend the functionality of Qiskit.
