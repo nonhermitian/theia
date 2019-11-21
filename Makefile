@@ -36,10 +36,10 @@ endif
 
 # Ignoring generated ones with .py extension.
 lint:
-	pylint -rn qiskit.jupyter test
+	pylint -rn qiskit.interactive
 
 style:
-	pycodestyle --max-line-length=100 qiskit.jupyter test
+	pycodestyle --max-line-length=100 qiskit
 
 # Use the -s (starting directory) flag for "unittest discover" is necessary,
 # otherwise the QuantumCircuit header will be modified during the discovery.
