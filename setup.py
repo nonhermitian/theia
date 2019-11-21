@@ -38,19 +38,19 @@ REQUIREMENTS = [
 version_path = os.path.abspath(
     os.path.join(
         os.path.join(
-            os.path.join(os.path.dirname(__file__), 'qiskit'), 'jupyter'),
+            os.path.join(os.path.dirname(__file__), 'qiskit'), 'interactive'),
         'VERSION.txt'))
 with open(version_path, 'r') as fd:
     VERSION = fd.read().rstrip()
 
 setuptools.setup(
-                name='qiskit-jupyter',
+                name='qiskit-interactive',
                 version=VERSION,
                 packages=setuptools.find_namespace_packages(exclude=['test*']),
                 cmake_source_dir='.',
-                description="Qiskit Jupyter - Widgets for Quantum Computing",
+                description="Qiskit Interative - Interactive elements for Quantum Computing",
                 url="",
-                author="Qiskit-Jupyter Development Team",
+                author="Qiskit-Interactive Development Team",
                 author_email="qiskit@us.ibm.com",
                 license="Apache 2.0",
                 classifiers=[
