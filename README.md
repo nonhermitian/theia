@@ -1,2 +1,2 @@
-# qiskit-interactive
-Interactive Jupyter tools for Qiskit
+# Theia
+Interactive tools for Qiskit
