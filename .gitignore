@@ -102,11 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-.DS_Store
-qiskit/.DS_Store
-qiskit/.DS_Store
-qiskit/jupyter/.DS_Store
-.DS_Store
-qiskit/.DS_Store
-qiskit/jupyter/.DS_Store
+
+/docs/stubs
 .DS_Store
