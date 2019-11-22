@@ -40,8 +40,7 @@ def job_summary(backend):
         backend (BaseBackend): A backend instance.
 
     Returns:
-        PlotlyFigureWrapper:
-            A figure for the rendered histogram.
+        FigureWrapper: A figure for the rendered histogram.
     """
     now = datetime.datetime.now()
     past_year_date = now - datetime.timedelta(days=365)
@@ -72,6 +71,14 @@ def job_summary(backend):
     parents = [""]
     values = [num_jobs]
 
+    colors = ['#003f5c', '#ffa600', '#2f4b7c', '#f95d6a',
+              '#665191', '#ff7c43', '#a05195', '#d45087']
+
+    num_colors = len(colors)
+
+    wedge_colors = ["#FFFFFF"]
+
+    month_counter = 0
     for yr_key, yr_dict in jobs_dates.items():
         # Do the months
         for key, val in yr_dict.items():
@@ -84,25 +91,28 @@ def job_summary(backend):
             parents.append(main_str)
             # Add to the total jobs in that year to values
             values.append(total_jobs_month)
+            wedge_colors.append(colors[month_counter % num_colors])
+            month_counter += 1
 
             #Do the days
+            day_counter = 0
             for day_num, day_jobs in val.items():
                 _day_num = day_num
                 if _day_num[0] == '0':
                     _day_num = _day_num[1:]
 
                 if _day_num[-1] == '1':
-                    if _day_num[0] != '1':
+                    if _day_num[0] != '1' and len(_day_num) == 1:
                         _day_num = _day_num+'st'
                     else:
                         _day_num = _day_num+'th'
                 elif _day_num[-1] == '2':
-                    if _day_num[0] != '1':
+                    if _day_num[0] != '1' and len(_day_num) == 1:
                         _day_num = _day_num+'nd'
                     else:
                         _day_num = _day_num+'th'
                 elif _day_num[-1] == '3':
-                    if _day_num[0] != '1':
+                    if _day_num[0] != '1' and len(_day_num) == 1:
                         _day_num = _day_num+'rd'
                     else:
                         _day_num = _day_num+'th'
@@ -112,18 +122,13 @@ def job_summary(backend):
                 labels.append(_day_num)
                 parents.append(month_label)
                 values.append(day_jobs)
-
-    colors = ['#003f5c', '#ffa600', '#374c80', '#ff764a',
-              '#7a5195', '#ef5675', '#bc5090']
-
-    num_colors = len(colors)
+                wedge_colors.append(colors[day_counter % num_colors])
+                day_counter += 1
 
     wedge_str = "<b>{label}</b><br><b>{value} Jobs</b>"
 
     hover_text = [None]+[wedge_str.format(label=labels[kk],
                                           value=values[kk]) for kk in range(1, len(labels))]
-
-    wedge_colors = ["#FFFFFF"]+[colors[kk % num_colors]for kk in range(len(parents)-1)]
 
     fig = go.Figure(go.Sunburst(labels=labels,
                                 parents=parents,
@@ -137,4 +142,5 @@ def job_summary(backend):
                                 marker=dict(colors=wedge_colors),
                                 )
                     )
+    fig.update_layout(margin=dict(t=40, l=40, r=40, b=40))
     return PlotlyFigure(fig)

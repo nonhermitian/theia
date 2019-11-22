@@ -12,8 +12,20 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-"""The main theia module"""
+"""
+===========================================
+Visualizations (:mod:`theia.visualization`)
+===========================================
 
+.. currentmodule:: theia.visualization
+
+.. autosummary::
+   :toctree: ../stubs/
+
+   iplot_histogram
+   iplot_error_map
+   job_summary
+"""
 from .counts_visualization import iplot_histogram
 from .error_map import iplot_error_map
 from .jobs import job_summary
