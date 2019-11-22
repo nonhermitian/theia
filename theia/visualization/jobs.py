@@ -17,7 +17,7 @@
 import datetime
 import plotly.graph_objects as go
 from ..date_utils.converters import utc_to_local
-from .plotly_wrapper import PlotlyFigure
+from .plotly_wrapper import PlotlyWidget
 
 
 MONTH_NAMES = {1: 'Jan.',
@@ -41,6 +41,19 @@ def job_summary(backend):
 
     Returns:
         FigureWrapper: A figure for the rendered histogram.
+
+    Example:
+        .. jupyter-execute::
+
+           from qiskit import IBMQ
+           from theia.visualization import job_summary
+
+           IBMQ.load_account()
+
+           provider = IBMQ.get_provider(group='open', project='main')
+           backend = provider.get_backend('ibmq_vigo')
+
+           job_summary(backend)
     """
     now = datetime.datetime.now()
     past_year_date = now - datetime.timedelta(days=365)
@@ -143,4 +156,4 @@ def job_summary(backend):
                                 )
                     )
     fig.update_layout(margin=dict(t=40, l=40, r=40, b=40))
-    return PlotlyFigure(fig)
+    return PlotlyWidget(fig)

@@ -21,7 +21,7 @@ import seaborn as sns
 import matplotlib as mpl
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from .plotly_wrapper import PlotlyFigure
+from .plotly_wrapper import PlotlyWidget
 from .colormaps import HELIX_LIGHT, HELIX_DARK
 
 
@@ -46,6 +46,19 @@ def iplot_error_map(backend, figsize=(700, 500),
     Raises:
         ValueError: Invalid color selection.
         TypeError: If tried to pass a simulator.
+
+    Example:
+        .. jupyter-execute::
+
+           from qiskit import IBMQ
+           from theia.visualization import iplot_error_map
+
+           IBMQ.load_account()
+
+           provider = IBMQ.get_provider(group='open', project='main')
+           backend = provider.get_backend('ibmq_vigo')
+
+           iplot_error_map(backend)
     """
     if background_color == 'white':
         color_map = sns.cubehelix_palette(reverse=True, as_cmap=True)
@@ -451,4 +464,4 @@ def iplot_error_map(backend, figsize=(700, 500),
                       margin=dict(t=60, l=0, r=0, b=0)
                      )
 
-    return PlotlyFigure(fig)
+    return PlotlyWidget(fig)
