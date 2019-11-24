@@ -86,6 +86,8 @@ def iplot_gate_map(backend, figsize=(None, None), label_qubits=True,
         qubit_size = 32
     if font_size is None:
         font_size = 14
+    if line_width is None:
+        line_width = 6
     if figsize == (None, None):
         figsize = (300, 300)
     offset = 0
@@ -95,6 +97,8 @@ def iplot_gate_map(backend, figsize=(None, None), label_qubits=True,
             qubit_size = 24
         if font_size is None:
             font_size = 10
+        if line_width is None:
+            line_width = 4
         if figsize == (None, None):
             figsize = (400, 200)
 
