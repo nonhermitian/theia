@@ -26,9 +26,11 @@ Functions
    :toctree: ../stubs/
 
    iplot_histogram
+   iplot_gate_map
    iplot_error_map
    job_summary
 """
 from .counts_visualization import iplot_histogram
+from .gate_map import iplot_gate_map
 from .error_map import iplot_error_map
 from .jobs import job_summary
