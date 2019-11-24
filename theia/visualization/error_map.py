@@ -22,6 +22,7 @@ import matplotlib as mpl
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from .plotly_wrapper import PlotlyWidget
+from.device_layouts import DEVICE_LAYOUTS
 from .colormaps import HELIX_LIGHT, HELIX_DARK
 
 
@@ -75,41 +76,22 @@ def iplot_error_map(backend, figsize=(700, 500),
     if backend.configuration().simulator:
         raise TypeError('Requires a device backend, not simulator.')
 
-    mpl_data = {}
-
-    mpl_data[20] = [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4],
-                    [1, 0], [1, 1], [1, 2], [1, 3], [1, 4],
-                    [2, 0], [2, 1], [2, 2], [2, 3], [2, 4],
-                    [3, 0], [3, 1], [3, 2], [3, 3], [3, 4]]
-
-    mpl_data[14] = [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4],
-                    [0, 5], [0, 6], [1, 7], [1, 6], [1, 5],
-                    [1, 4], [1, 3], [1, 2], [1, 1]]
-
-    mpl_data[16] = [[1, 0], [0, 0], [0, 1], [0, 2], [0, 3],
-                    [0, 4], [0, 5], [0, 6], [0, 7], [1, 7],
-                    [1, 6], [1, 5], [1, 4], [1, 3], [1, 2], [1, 1]]
-
-    mpl_data[5] = [[1, 0], [0, 1], [1, 1], [1, 2], [2, 1]]
-
-    mpl_data[53] = [[0, 2], [0, 3], [0, 4], [0, 5], [0, 6],
-                    [1, 2], [1, 6],
-                    [2, 0], [2, 1], [2, 2], [2, 3], [2, 4],
-                    [2, 5], [2, 6], [2, 7], [2, 8],
-                    [3, 0], [3, 4], [3, 8],
-                    [4, 0], [4, 1], [4, 2], [4, 3], [4, 4],
-                    [4, 5], [4, 6], [4, 7], [4, 8],
-                    [5, 2], [5, 6],
-                    [6, 0], [6, 1], [6, 2], [6, 3], [6, 4],
-                    [6, 5], [6, 6], [6, 7], [6, 8],
-                    [7, 0], [7, 4], [7, 8],
-                    [8, 0], [8, 1], [8, 2], [8, 3], [8, 4],
-                    [8, 5], [8, 6], [8, 7], [8, 8],
-                    [9, 2], [9, 6]]
-
     config = backend.configuration()
     n_qubits = config.n_qubits
     cmap = config.coupling_map
+
+    if n_qubits in DEVICE_LAYOUTS.keys():
+        grid_data = DEVICE_LAYOUTS[n_qubits]
+    else:
+        fig = go.Figure()
+        fig.update_layout(showlegend=False,
+                          plot_bgcolor=background_color,
+                          paper_bgcolor=background_color,
+                          width=figsize[0], height=figsize[1],
+                          margin=dict(t=60, l=0, r=0, b=0)
+                         )
+        out = PlotlyWidget(fig)
+        return out
 
     props = backend.properties().to_dict()
 
@@ -192,19 +174,6 @@ def iplot_error_map(backend, figsize=(700, 500),
     else:
         num_left = math.ceil(n_qubits / 2)
         num_right = n_qubits - num_left
-
-    if n_qubits in mpl_data.keys():
-        grid_data = mpl_data[n_qubits]
-    else:
-        fig = go.Figure()
-        fig.update_layout(showlegend=False,
-                          plot_bgcolor=background_color,
-                          paper_bgcolor=background_color,
-                          width=figsize[0], height=figsize[1],
-                          margin=dict(t=60, l=0, r=0, b=0)
-                         )
-        out = PlotlyFigure(fig)
-        return out
 
     x_max = max([d[1] for d in grid_data])
     y_max = max([d[0] for d in grid_data])
