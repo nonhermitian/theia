@@ -19,6 +19,9 @@ Visualizations (:mod:`theia.visualization`)
 
 .. currentmodule:: theia.visualization
 
+Functions
+=========
+
 .. autosummary::
    :toctree: ../stubs/
 
