@@ -82,14 +82,6 @@ def iplot_gate_map(backend, figsize=(None, None), label_qubits=True,
     y_max = max([d[0] for d in grid_data])
     max_dim = max(x_max, y_max)
 
-    if qubit_size is None:
-        qubit_size = 32
-    if font_size is None:
-        font_size = 14
-    if line_width is None:
-        line_width = 6
-    if figsize == (None, None):
-        figsize = (300, 300)
     offset = 0
     if y_max / max_dim < 0.33:
         offset = 1
@@ -101,6 +93,15 @@ def iplot_gate_map(backend, figsize=(None, None), label_qubits=True,
             line_width = 4
         if figsize == (None, None):
             figsize = (400, 200)
+    else:
+        if qubit_size is None:
+            qubit_size = 32
+        if font_size is None:
+            font_size = 14
+        if line_width is None:
+            line_width = 6
+        if figsize == (None, None):
+            figsize = (300, 300)
 
     fig = go.Figure()
 
@@ -161,8 +162,10 @@ def iplot_gate_map(backend, figsize=(None, None), label_qubits=True,
             qubit_text.append(qubit_str.format(num))
 
     if n_qubits > 50:
-        qubit_size = 20
-        font_size = 9
+        if qubit_size is None:
+            qubit_size = 20
+        if font_size is None:
+            font_size = 9
 
     fig.add_trace(go.Scatter(
         x=[d[1] for d in grid_data],

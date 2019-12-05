@@ -13,11 +13,11 @@
 # that they have been altered from the originals.
 
 """
-====================================================
-Qiskit Interactive Tools (:mod:`qiskit.interactive`)
-====================================================
+===========================================
+Interactive Tools for Qiskit (:mod:`theia`)
+===========================================
 
-.. currentmodule:: qiskit.interative
+.. currentmodule:: theia
 
 A Collection of interative tools
 that extend the functionality of Qiskit.
