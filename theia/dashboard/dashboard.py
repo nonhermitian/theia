@@ -209,8 +209,12 @@ class IBMQDashboard(Subscriber):
                                            job.queue_position(),
                                            status.value)
             self.jobs.append(job_widget)
-            self.refresh_jobs_board()
             _job_monitor(job, status, self)
+            
+            if len(self.jobs) > 50:
+                self.clear_done()
+            else:
+                self.refresh_jobs_board()
 
         self.subscribe("ibmq.job.start", _add_job)
 

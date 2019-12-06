@@ -16,7 +16,7 @@
 import time
 import threading
 
-def update_backend_info(device_list, interval=60):
+def update_backend_info(device_list, interval=30):
     """Updates the device list from another thread
     """
     my_thread = threading.currentThread()
