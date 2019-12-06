@@ -21,6 +21,7 @@ from IPython.display import display, Javascript
 from IPython.core.magic import line_magic, Magics, magics_class
 from qiskit.tools.events.pubsub import Subscriber
 from qiskit.providers.ibmq import IBMQ
+from qiskit.exceptions import QiskitError
 from qiskit.providers.ibmq.job.exceptions import IBMQJobApiError
 from .job_widgets import (make_clear_button,
                           make_labels, create_job_widget)
@@ -280,6 +281,9 @@ class IBMQDashboardMagic(Magics):
     def ibmq_dashboard(self, line='', cell=None):
         """A Jupyter magic function to enable job watcher.
         """
+        pro = IBMQ.providers()
+        if not pro:
+            raise QiskitError("No providers found.  Must load your IBMQ account.")
         _IBMQ_DASHBOARD.stop_dashboard()
         _IBMQ_DASHBOARD.start_dashboard()
 
