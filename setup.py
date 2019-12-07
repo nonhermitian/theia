@@ -19,7 +19,7 @@ import setuptools
 
 if not hasattr(setuptools,
                'find_namespace_packages') or not inspect.ismethod(
-                    setuptools.find_namespace_packages):
+                   setuptools.find_namespace_packages):
     print("Your setuptools version:'{}' does not support PEP 420 "
           "(find_namespace_packages). Upgrade it to version >='40.1.0' and "
           "repeat install.".format(setuptools.__version__))
@@ -32,44 +32,44 @@ REQUIREMENTS = [
     'matplotlib>=3.0',
     'ipywidgets>=7.3.0',
     "seaborn>=0.9.0",
-    "plotly>=4.1"
+    "plotly>=4.1",
+    "ipyvuetify>=1.1",
+    "pyperclip>=1.7"
 ]
 
-version_path = os.path.abspath(
-    os.path.join(
-            os.path.join(os.path.dirname(__file__), 'theia',
-        'VERSION.txt')))
-with open(version_path, 'r') as fd:
+VERSION_PATH = os.path.abspath(
+    os.path.join(os.path.join(os.path.dirname(__file__), 'theia', 'VERSION.txt')))
+with open(VERSION_PATH, 'r') as fd:
     VERSION = fd.read().rstrip()
 
 setuptools.setup(
-                name='theia',
-                version=VERSION,
-                packages=setuptools.find_namespace_packages(exclude=['test*']),
-                cmake_source_dir='.',
-                description="Theia - Interactive elements for Qiskit",
-                url="",
-                author="Theia Development Team",
-                author_email="qiskit@us.ibm.com",
-                license="Apache 2.0",
-                classifiers=[
-                    "Environment :: Web Environment",
-                    "License :: OSI Approved :: Apache Software License",
-                    "Intended Audience :: Developers",
-                    "Intended Audience :: Science/Research",
-                    "Operating System :: Microsoft :: Windows",
-                    "Operating System :: MacOS",
-                    "Operating System :: POSIX :: Linux",
-                    "Programming Language :: Python :: 3.5",
-                    "Programming Language :: Python :: 3.6",
-                    "Programming Language :: Python :: 3.7",
-                    "Programming Language :: Python :: 3.8",
-                    "Topic :: Scientific/Engineering",
-                ],
-                install_requires=REQUIREMENTS,
-                keywords="qiskit jupyter quantum widgets",
-                include_package_data=True,
-                zip_safe=False
+    name='theia',
+    version=VERSION,
+    packages=setuptools.find_namespace_packages(exclude=['test*']),
+    cmake_source_dir='.',
+    description="Theia - Interactive elements for Qiskit",
+    url="",
+    author="Theia Development Team",
+    author_email="qiskit@us.ibm.com",
+    license="Apache 2.0",
+    classifiers=[
+        "Environment :: Web Environment",
+        "License :: OSI Approved :: Apache Software License",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Operating System :: Microsoft :: Windows",
+        "Operating System :: MacOS",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Topic :: Scientific/Engineering",
+    ],
+    install_requires=REQUIREMENTS,
+    keywords="qiskit jupyter quantum widgets",
+    include_package_data=True,
+    zip_safe=False
 )
 SAVING = """\
 ==============================================================================
