@@ -23,4 +23,10 @@ A Collection of interative tools
 that extend the functionality of Qiskit.
 
 """
+from IPython import get_ipython # pylint: disable=import-error
+from .dashboard.dashboard import IBMQDashboardMagic
 from .version import __version__
+
+_IP = get_ipython()
+if _IP is not None:
+    _IP.register_magics(IBMQDashboardMagic)
