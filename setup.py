@@ -75,7 +75,8 @@ SAVING = """\
 ==============================================================================
 Saving interactive plots as static images requires Orca:
 
->> conda install -c plotly-orca
+>> conda config --append channels plotly
+>> conda install plotly-orca
 
 or see:
 

@@ -55,7 +55,8 @@ def make_backend_widget(backend_item):
                                                       msg=status.status_msg))
 
     left_labels = wid.VBox(children=[qubits_wid, status_wid])
-    left_values = wid.VBox(children=[qubits_val_wid, status_val_wid])
+    left_values = wid.VBox(children=[qubits_val_wid, status_val_wid],
+                           layout=wid.Layout(margin="1px 0px 0px 0px"))
 
     left_stats = wid.HBox(children=[left_labels, left_values],
                           layout=wid.Layout(width='175px')
@@ -63,11 +64,13 @@ def make_backend_widget(backend_item):
 
     version_wid = wid.HTML(value="<font size='3'>Version:</font>")
     ver_str = "<font size='4' face='monospace'>%s</font>"
-    version_val_wid = wid.HTML(value=ver_str % config.backend_version)
+    version_val_wid = wid.HTML(value=ver_str % config.backend_version,
+                               layout=wid.Layout(margin="3px 0px 0px 0px"))
 
     queue_wid = wid.HTML(value="<font size='3'>Queue:</font>")
     queue_str = "<font size='4' face='monospace'>%s</font>"
-    queue_val_wid = wid.HTML(value=queue_str % status.pending_jobs)
+    queue_val_wid = wid.HTML(value=queue_str % status.pending_jobs,
+                             layout=wid.Layout(margin="5px 0px 0px 0px"))
 
     right_labels = wid.VBox(children=[version_wid, queue_wid])
     right_values = wid.VBox(children=[version_val_wid, queue_val_wid])
@@ -152,17 +155,28 @@ def make_backend_widget(backend_item):
         cx_label = wid.HTML(value="<font size='2'>Avg. CX Err.:</font>")
         cx_wid = wid.HTML(value=cx_str.format(cx_err=avg_cx_err))
 
+    quant_vol = 'None'
+    try:
+        quant_vol = config.quantum_volume
+    except AttributeError:
+        pass
+    qv_label = wid.HTML(value="<font size='2'>Quantum Volume:</font>")
+    qv_str = "<font size='3' face='monospace'>{qv}</font><font size='2'></font>"
+    qv_wid = wid.HTML(value=qv_str.format(qv=quant_vol),
+                      layout=wid.Layout(margin="-1px 0px 0px 0px"))
+
     if n_qubits != 1:
-        left_wids = [t12_label, meas_label, cx_label]
-        right_wids = [t12_wid, meas_wid, cx_wid]
+        left_wids = [t12_label, cx_label, meas_label, qv_label]
+        right_wids = [t12_wid, cx_wid, meas_wid, qv_wid]
 
     else:
-        left_wids = [t12_label, meas_label]
-        right_wids = [t12_wid, meas_wid]
+        left_wids = [t12_label, meas_label, qv_label]
+        right_wids = [t12_wid, meas_wid, qv_wid]
 
-    left_wid = wid.VBox(children=left_wids)
+    left_wid = wid.VBox(children=left_wids,
+                        layout=wid.Layout(margin="2px 0px 0px 0px"))
     right_wid = wid.VBox(children=right_wids,
-                         layout=wid.Layout(margin='0px 0px 0px 5px'))
+                         layout=wid.Layout(margin="0px 0px 0px 3px"))
 
     stats = wid.HBox(children=[left_wid, right_wid])
 

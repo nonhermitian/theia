@@ -283,7 +283,14 @@ class IBMQDashboardMagic(Magics):
         """
         pro = IBMQ.providers()
         if not pro:
-            raise QiskitError("No providers found.  Must load your IBMQ account.")
+            try:
+                IBMQ.load_account()
+            except Exception:
+                raise QiskitError("Could not load IBMQ account from local file.")
+            else:
+                pro = IBMQ.providers()
+                if not pro:
+                    raise QiskitError("No providers found.  Must load your IBMQ account.")
         _IBMQ_DASHBOARD.stop_dashboard()
         _IBMQ_DASHBOARD.start_dashboard()
 
