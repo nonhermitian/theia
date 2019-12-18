@@ -126,35 +126,36 @@ def iplot_error_map(backend, figsize=(700, 500),
 
     q_colors = [mpl.colors.rgb2hex(color_map(single_norm(err))) for err in single_gate_errors]
 
-    cx_errors = []
-    for line in cmap:
-        for item in props['gates']:
-            if item['qubits'] == line:
-                cx_errors.append(item['parameters'][0]['value'])
-                break
-        else:
-            continue
-
-    # Convert to percent
-    cx_errors = 100 * np.asarray(cx_errors)
-
-    # remove bad cx edges
-    if remove_badcal_edges:
-        cx_idx = np.where(cx_errors != 100.0)[0]
-    else:
-        cx_idx = np.arange(len(cx_errors))
-
-    avg_cx_err = np.mean(cx_errors[cx_idx])
-
-    cx_norm = mpl.colors.Normalize(
-        vmin=min(cx_errors[cx_idx]), vmax=max(cx_errors[cx_idx]))
-
     line_colors = []
-    for err in cx_errors:
-        if err != 100.0 or not remove_badcal_edges:
-            line_colors.append(mpl.colors.rgb2hex(color_map(cx_norm(err))))
+    if cmap:
+        cx_errors = []
+        for line in cmap:
+            for item in props['gates']:
+                if item['qubits'] == line:
+                    cx_errors.append(item['parameters'][0]['value'])
+                    break
+            else:
+                continue
+
+        # Convert to percent
+        cx_errors = 100 * np.asarray(cx_errors)
+
+        # remove bad cx edges
+        if remove_badcal_edges:
+            cx_idx = np.where(cx_errors != 100.0)[0]
         else:
-            line_colors.append("#ff0000")
+            cx_idx = np.arange(len(cx_errors))
+
+        avg_cx_err = np.mean(cx_errors[cx_idx])
+
+        cx_norm = mpl.colors.Normalize(
+            vmin=min(cx_errors[cx_idx]), vmax=max(cx_errors[cx_idx]))
+
+        for err in cx_errors:
+            if err != 100.0 or not remove_badcal_edges:
+                line_colors.append(mpl.colors.rgb2hex(color_map(cx_norm(err))))
+            else:
+                line_colors.append("#ff0000")
 
     # Measurement errors
     read_err = []
@@ -182,16 +183,21 @@ def iplot_error_map(backend, figsize=(700, 500),
     qubit_size = 32
     font_size = 14
     offset = 0
-    if y_max / max_dim < 0.33:
-        qubit_size = 24
-        font_size = 10
-        offset = 1
+    if cmap:
+        if y_max / max_dim < 0.33:
+            qubit_size = 24
+            font_size = 10
+            offset = 1
 
     if n_qubits > 5:
         right_meas_title = "Readout Error (%)"
     else:
         right_meas_title = None
 
+    if cmap:
+        cx_title = "CNOT Error Rate [Avg. {}%]".format(np.round(avg_cx_err, 3))
+    else:
+        cx_title = None
     fig = make_subplots(rows=2, cols=11, row_heights=[0.95, 0.05],
                         vertical_spacing=0.15,
                         specs=[[{"colspan": 2}, None, {"colspan": 6},
@@ -205,60 +211,60 @@ def iplot_error_map(backend, figsize=(700, 500),
                         subplot_titles=("Readout Error (%)", None, right_meas_title,
                                         "Hadamard Error Rate [Avg. {}%]".format(
                                             np.round(avg_1q_err, 3)),
-                                        "CNOT Error Rate [Avg. {}%]".format(
-                                            np.round(avg_cx_err, 3)))
-                       )
+                                        cx_title)
+                        )
 
     # Add lines for couplings
-    for ind, edge in enumerate(cmap):
-        is_symmetric = False
-        if edge[::-1] in cmap:
-            is_symmetric = True
-        y_start = grid_data[edge[0]][0] + offset
-        x_start = grid_data[edge[0]][1]
-        y_end = grid_data[edge[1]][0] + offset
-        x_end = grid_data[edge[1]][1]
+    if cmap:
+        for ind, edge in enumerate(cmap):
+            is_symmetric = False
+            if edge[::-1] in cmap:
+                is_symmetric = True
+            y_start = grid_data[edge[0]][0] + offset
+            x_start = grid_data[edge[0]][1]
+            y_end = grid_data[edge[1]][0] + offset
+            x_end = grid_data[edge[1]][1]
 
-        if is_symmetric:
-            if y_start == y_end:
-                x_end = (x_end - x_start) / 2 + x_start
-                x_mid = x_end
-                y_mid = y_start
+            if is_symmetric:
+                if y_start == y_end:
+                    x_end = (x_end - x_start) / 2 + x_start
+                    x_mid = x_end
+                    y_mid = y_start
 
-            elif x_start == x_end:
-                y_end = (y_end - y_start) / 2 + y_start
-                x_mid = x_start
-                y_mid = y_end
+                elif x_start == x_end:
+                    y_end = (y_end - y_start) / 2 + y_start
+                    x_mid = x_start
+                    y_mid = y_end
 
+                else:
+                    x_end = (x_end - x_start) / 2 + x_start
+                    y_end = (y_end - y_start) / 2 + y_start
+                    x_mid = x_end
+                    y_mid = y_end
             else:
-                x_end = (x_end - x_start) / 2 + x_start
-                y_end = (y_end - y_start) / 2 + y_start
-                x_mid = x_end
-                y_mid = y_end
-        else:
-            if y_start == y_end:
-                x_mid = (x_end - x_start) / 2 + x_start
-                y_mid = y_end
+                if y_start == y_end:
+                    x_mid = (x_end - x_start) / 2 + x_start
+                    y_mid = y_end
 
-            elif x_start == x_end:
-                x_mid = x_end
-                y_mid = (y_end - y_start) / 2 + y_start
+                elif x_start == x_end:
+                    x_mid = x_end
+                    y_mid = (y_end - y_start) / 2 + y_start
 
-            else:
-                x_mid = (x_end - x_start) / 2 + x_start
-                y_mid = (y_end - y_start) / 2 + y_start
+                else:
+                    x_mid = (x_end - x_start) / 2 + x_start
+                    y_mid = (y_end - y_start) / 2 + y_start
 
-        fig.append_trace(
-            go.Scatter(x=[x_start, x_mid, x_end],
-                       y=[-y_start, -y_mid, -y_end],
-                       mode="lines",
-                       line=dict(width=6,
-                                 color=line_colors[ind]
-                                ),
-                       hoverinfo='text',
-                       hovertext='CX<sub>err</sub>{B}_{A} = {err} %'.format(
-                           A=edge[0], B=edge[1], err=np.round(cx_errors[ind], 3))
-                      ), row=1, col=3)
+            fig.append_trace(
+                go.Scatter(x=[x_start, x_mid, x_end],
+                           y=[-y_start, -y_mid, -y_end],
+                           mode="lines",
+                           line=dict(width=6,
+                                     color=line_colors[ind]
+                                    ),
+                           hoverinfo='text',
+                           hovertext='CX<sub>err</sub>{B}_{A} = {err} %'.format(
+                               A=edge[0], B=edge[1], err=np.round(cx_errors[ind], 3))
+                           ), row=1, col=3)
 
     # Add the qubits themselves
     qubit_text = []
@@ -328,21 +334,22 @@ def iplot_error_map(backend, figsize=(700, 500),
                                np.round(max(single_gate_errors), 3)])
 
     # CX error rate colorbar
-    fig.append_trace(go.Heatmap(z=[np.linspace(min(cx_errors),
-                                               max(cx_errors), 100),
-                                   np.linspace(min(cx_errors),
-                                               max(cx_errors), 100)],
-                                colorscale=plotly_cmap,
-                                showscale=False,
-                                hoverinfo='none'), row=2, col=7)
+    if cmap:
+        fig.append_trace(go.Heatmap(z=[np.linspace(min(cx_errors),
+                                                   max(cx_errors), 100),
+                                       np.linspace(min(cx_errors),
+                                                   max(cx_errors), 100)],
+                                    colorscale=plotly_cmap,
+                                    showscale=False,
+                                    hoverinfo='none'), row=2, col=7)
 
-    fig.update_yaxes(row=2, col=7, visible=False)
+        fig.update_yaxes(row=2, col=7, visible=False)
 
-    fig.update_xaxes(row=2, col=7,
-                     tickvals=[0, 49, 99],
-                     ticktext=[np.round(min(cx_errors[cx_idx]), 3),
-                               np.round(max(cx_errors[cx_idx])-min(cx_errors[cx_idx]), 3),
-                               np.round(max(cx_errors[cx_idx]), 3)])
+        fig.update_xaxes(row=2, col=7,
+                         tickvals=[0, 49, 99],
+                         ticktext=[np.round(min(cx_errors[cx_idx]), 3),
+                                   np.round(max(cx_errors[cx_idx])-min(cx_errors[cx_idx]), 3),
+                                   np.round(max(cx_errors[cx_idx]), 3)])
 
     hover_text = "<b>Qubit {}</b><br>M<sub>err</sub> = {} %"
     # Add the left side meas errors

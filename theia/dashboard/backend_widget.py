@@ -98,24 +98,26 @@ def make_backend_widget(backend_item):
     if n_qubits < 10:
         qubit_size = 18
         line_width = 4
+    if n_qubits > 27:
+        qubit_size = 12
+        line_width = 3
     if n_qubits > 50:
         qubit_size = 12
         line_width = 3
 
-    if n_qubits != 1:
-        _gmap = iplot_gate_map(backend, figsize=(150, 150),
-                               qubit_size=qubit_size,
-                               line_width=line_width,
-                               qubit_color='#031981',
-                               line_color='#031981',
-                               label_qubits=False)
-        gmap = wid.Box(children=[_gmap],
-                       layout=wid.Layout(width='auto',
-                                         justify_content='center',
-                                         align_content='center',
-                                         ))
-    else:
-        gmap = wid.Box(layout=wid.Layout(width='175px', height='175px'))
+    _gmap = iplot_gate_map(backend, figsize=(150, 150),
+                           qubit_size=qubit_size,
+                           line_width=line_width,
+                           qubit_color='#031981',
+                           line_color='#031981',
+                           label_qubits=False)
+
+    gmap = wid.Box(children=[_gmap],
+                   layout=wid.Layout(width='auto',
+                                     justify_content='center',
+                                     align_content='center',
+                                    )
+                  )
 
     # Get basic device stats
     t1_units = props['qubits'][0][0]['unit']

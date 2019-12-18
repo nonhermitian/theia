@@ -29,4 +29,4 @@ def utc_to_local(utc_str):
     local_tz = datetime.datetime.now().astimezone().tzinfo
     local_tz_name = local_tz.tzname(None)
     local_dt = utc_dt.astimezone(local_tz)
-    return local_dt.strftime("%Y-%m-%d %H:%M:%S {}".format(local_tz_name))
+    return local_dt.strftime("%Y-%m-%dT%H:%M:%S {}".format(local_tz_name))

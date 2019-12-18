@@ -63,7 +63,7 @@ def iplot_gate_map(backend, figsize=(None, None), label_qubits=True,
     if isinstance(qubit_color, str):
         qubit_color = [qubit_color] * n_qubits
     if isinstance(line_color, str):
-        line_color = [line_color] * len(cmap)
+        line_color = [line_color] * len(cmap) if cmap else []
 
     if n_qubits in DEVICE_LAYOUTS.keys():
         grid_data = DEVICE_LAYOUTS[n_qubits]
@@ -83,76 +83,83 @@ def iplot_gate_map(backend, figsize=(None, None), label_qubits=True,
     max_dim = max(x_max, y_max)
 
     offset = 0
-    if y_max / max_dim < 0.33:
-        offset = 1
-        if qubit_size is None:
-            qubit_size = 24
-        if font_size is None:
-            font_size = 10
-        if line_width is None:
-            line_width = 4
-        if figsize == (None, None):
-            figsize = (400, 200)
+    if cmap:
+        if y_max / max_dim < 0.33:
+            offset = 1
+            if qubit_size is None:
+                qubit_size = 24
+            if font_size is None:
+                font_size = 10
+            if line_width is None:
+                line_width = 4
+            if figsize == (None, None):
+                figsize = (400, 200)
+        else:
+            if qubit_size is None:
+                qubit_size = 32
+            if font_size is None:
+                font_size = 14
+            if line_width is None:
+                line_width = 6
+            if figsize == (None, None):
+                figsize = (300, 300)
     else:
-        if qubit_size is None:
-            qubit_size = 32
-        if font_size is None:
-            font_size = 14
-        if line_width is None:
-            line_width = 6
         if figsize == (None, None):
             figsize = (300, 300)
+        if qubit_size is None:
+                qubit_size = 30
 
     fig = go.Figure()
 
     # Add lines for couplings
-    for ind, edge in enumerate(cmap):
-        is_symmetric = False
-        if edge[::-1] in cmap:
-            is_symmetric = True
-        y_start = grid_data[edge[0]][0] + offset
-        x_start = grid_data[edge[0]][1]
-        y_end = grid_data[edge[1]][0] + offset
-        x_end = grid_data[edge[1]][1]
+    if cmap:
+        for ind, edge in enumerate(cmap):
+            is_symmetric = False
+            if edge[::-1] in cmap:
+                is_symmetric = True
+            y_start = grid_data[edge[0]][0] + offset
+            x_start = grid_data[edge[0]][1]
+            y_end = grid_data[edge[1]][0] + offset
+            x_end = grid_data[edge[1]][1]
 
-        if is_symmetric:
-            if y_start == y_end:
-                x_end = (x_end - x_start) / 2 + x_start
-                x_mid = x_end
-                y_mid = y_start
+            if is_symmetric:
+                if y_start == y_end:
+                    x_end = (x_end - x_start) / 2 + x_start
+                    x_mid = x_end
+                    y_mid = y_start
 
-            elif x_start == x_end:
-                y_end = (y_end - y_start) / 2 + y_start
-                x_mid = x_start
-                y_mid = y_end
+                elif x_start == x_end:
+                    y_end = (y_end - y_start) / 2 + y_start
+                    x_mid = x_start
+                    y_mid = y_end
 
+                else:
+                    x_end = (x_end - x_start) / 2 + x_start
+                    y_end = (y_end - y_start) / 2 + y_start
+                    x_mid = x_end
+                    y_mid = y_end
             else:
-                x_end = (x_end - x_start) / 2 + x_start
-                y_end = (y_end - y_start) / 2 + y_start
-                x_mid = x_end
-                y_mid = y_end
-        else:
-            if y_start == y_end:
-                x_mid = (x_end - x_start) / 2 + x_start
-                y_mid = y_end
+                if y_start == y_end:
+                    x_mid = (x_end - x_start) / 2 + x_start
+                    y_mid = y_end
 
-            elif x_start == x_end:
-                x_mid = x_end
-                y_mid = (y_end - y_start) / 2 + y_start
+                elif x_start == x_end:
+                    x_mid = x_end
+                    y_mid = (y_end - y_start) / 2 + y_start
 
-            else:
-                x_mid = (x_end - x_start) / 2 + x_start
-                y_mid = (y_end - y_start) / 2 + y_start
+                else:
+                    x_mid = (x_end - x_start) / 2 + x_start
+                    y_mid = (y_end - y_start) / 2 + y_start
 
-        fig.add_trace(
-            go.Scatter(x=[x_start, x_mid, x_end],
-                       y=[-y_start, -y_mid, -y_end],
-                       mode="lines",
-                       hoverinfo='none',
-                       line=dict(width=line_width,
-                                 color=line_color[ind]
-                                ),
-                       ))
+            fig.add_trace(
+                go.Scatter(x=[x_start, x_mid, x_end],
+                           y=[-y_start, -y_mid, -y_end],
+                           mode="lines",
+                        hoverinfo='none',
+                        line=dict(width=line_width,
+                                    color=line_color[ind]
+                                    ),
+                        ))
 
     # Add the qubits themselves
     if qubit_labels is None:
