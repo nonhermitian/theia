@@ -105,3 +105,5 @@ venv.bak/
 
 /docs/stubs
 .DS_Store
+theia/cython/permute.cpp
+*.cpp

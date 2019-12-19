@@ -12,23 +12,19 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
+"Setup for Theia"
+
 import os
 import sys
-import inspect
 import setuptools
-
-if not hasattr(setuptools,
-               'find_namespace_packages') or not inspect.ismethod(
-                   setuptools.find_namespace_packages):
-    print("Your setuptools version:'{}' does not support PEP 420 "
-          "(find_namespace_packages). Upgrade it to version >='40.1.0' and "
-          "repeat install.".format(setuptools.__version__))
-    sys.exit(1)
+import numpy as np
+from Cython.Build import cythonize
 
 REQUIREMENTS = [
     "qiskit-terra>=0.11",
     "numpy>=1.13",
     "scipy>=1.0",
+    "cython >=0.27.1",
     'matplotlib>=3.0',
     'ipywidgets>=7.3.0',
     "seaborn>=0.9.0",
@@ -42,12 +38,42 @@ VERSION_PATH = os.path.abspath(
 with open(VERSION_PATH, 'r') as fd:
     VERSION = fd.read().rstrip()
 
+# Add Cython extensions here
+CYTHON_EXTS = ['permute', 'loco']
+CYTHON_MODULE = 'theia.cython'
+CYTHON_SOURCE_DIR = 'theia/cython'
+
+INCLUDE_DIRS = [np.get_include()]
+# Extra link args
+LINK_FLAGS = []
+# If on Win and not in MSYS2 (i.e. Visual studio compile)
+if (sys.platform == 'win32' and os.environ.get('MSYSTEM') is None):
+    COMPILER_FLAGS = ['/O2']
+# Everything else
+else:
+    COMPILER_FLAGS = ['-O2', '-funroll-loops', '-std=c++11']
+    if sys.platform == 'darwin':
+        # These are needed for compiling on OSX 10.14+
+        COMPILER_FLAGS.append('-mmacosx-version-min=10.9')
+        LINK_FLAGS.append('-mmacosx-version-min=10.9')
+
+EXT_MODULES = []
+# Add Cython Extensions
+for ext in CYTHON_EXTS:
+    mod = setuptools.Extension(CYTHON_MODULE + '.' + ext,
+                               sources=[CYTHON_SOURCE_DIR + '/' + ext + '.pyx'],
+                               include_dirs=INCLUDE_DIRS,
+                               extra_compile_args=COMPILER_FLAGS,
+                               extra_link_args=LINK_FLAGS,
+                               language='c++')
+    EXT_MODULES.append(mod)
+
 setuptools.setup(
     name='theia',
     version=VERSION,
     packages=setuptools.find_namespace_packages(exclude=['test*']),
     cmake_source_dir='.',
-    description="Theia - Interactive elements for Qiskit",
+    description="Theia - Tools for Qiskit",
     url="",
     author="Theia Development Team",
     author_email="qiskit@us.ibm.com",
@@ -69,6 +95,7 @@ setuptools.setup(
     install_requires=REQUIREMENTS,
     keywords="qiskit jupyter quantum widgets",
     include_package_data=True,
+    ext_modules=cythonize(EXT_MODULES),
     zip_safe=False
 )
 SAVING = """\
