@@ -12,27 +12,4 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-"""
-===========================================
-Visualizations (:mod:`theia.visualization`)
-===========================================
-
-.. currentmodule:: theia.visualization
-
-Functions
-=========
-
-.. autosummary::
-   :toctree: ../stubs/
-
-   iplot_histogram
-   iplot_gate_map
-   iplot_error_map
-   job_summary
-   wspy
-"""
-from .counts_visualization import iplot_histogram
-from .gate_map import iplot_gate_map
-from .error_map import iplot_error_map
-from .jobs import job_summary
-from .spy import wspy
+from .loco import local_ordering
