@@ -64,6 +64,7 @@ class IBMQDashboard(Subscriber):
         self._clear_jobs_button = make_clear_button(self)
         self._jobs_labels = make_labels()
         self.refresh_jobs_board()
+        self._snackbar = None
 
     def _get_backends(self):
         ibmq_backends = {}
@@ -211,7 +212,7 @@ class IBMQDashboard(Subscriber):
                                            status.value)
             self.jobs.append(job_widget)
             _job_monitor(job, status, self)
-            
+
             if len(self.jobs) > 50:
                 self.clear_done()
             else:
