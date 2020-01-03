@@ -15,4 +15,5 @@
 """A module of notifications
 """
 
+from .exceptions import exception_widget
 from .warnings import warning_widget
