@@ -16,13 +16,18 @@
 import traceback
 import ipyvuetify as vue
 from IPython.display import display
+from ..exceptions import SilentExit
 
 
 def exception_widget(exc):
-    """Create an exception notification widget.
+    """Create an exception notification widget and raises
+    sys.exit() silently.
 
     Parameters:
         exc (Exception): Input exception.
+
+    Raises:
+        SilentExit: Exits silently.
     """
     tback = traceback.TracebackException.from_exception(exc).format()
     trace_list = [string for string in tback if 'File' in string]
@@ -50,5 +55,6 @@ def exception_widget(exc):
                                                style_="margin: -15px 0px"
                                               )
                                   ],
-                        style_='height: auto; min-height: 140px;')
+                        style_='height: auto; min-height: 100px;')
     display(exc_card)
+    raise SilentExit
