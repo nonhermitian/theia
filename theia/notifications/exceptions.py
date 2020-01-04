@@ -14,9 +14,22 @@
 
 """An exception notifications module"""
 import traceback
+import sys
+from io import StringIO
 import ipyvuetify as vue
 from IPython.display import display
-from ..exceptions import SilentExit
+
+
+class SilentExit(SystemExit):
+    """A silent exception for Jupyter notebooks
+    """
+    def __init__(self):  #pylint: disable=super-init-not-called
+        sys.stderr = StringIO()
+        self.__class__.__name__ = ''
+
+    def __del__(self):
+        sys.stderr.flush()
+        sys.stderr = sys.__stderr__
 
 
 def exception_widget(exc):
