@@ -13,10 +13,19 @@
 # that they have been altered from the originals.
 
 """A Warnings snackbar module"""
+import threading
+import time
 import ipyvuetify as vue
 from IPython.display import display
 
 _CURRENT_WARNING = None
+
+
+def _close_snack(snack, duration):
+    """Closes a snackbar after the specified duration
+    """
+    time.sleep(duration)
+    snack.close()
 
 def warning_widget(msg, duration=5):
     """Makes a warning snackbar.
@@ -33,6 +42,7 @@ def warning_widget(msg, duration=5):
     if _CURRENT_WARNING:
         _CURRENT_WARNING.value = False
         _CURRENT_WARNING.close()
+        _CURRENT_WARNING = None
 
     snack_button = vue.Btn(text=True, children=['close'],
                            style_='color:#212121')
@@ -47,9 +57,16 @@ def warning_widget(msg, duration=5):
     #pylint: disable=unused-argument
     def on_click(widget, event, data):
         snack.value = False
+        snack.close()
 
     snack_button.on_event('click', on_click)
 
     _CURRENT_WARNING = snack
-
     display(snack)
+    # We need to close the snack via a thread otherwise if a
+    # notebook is closed and then reopened (while still active)
+    # the last snackbar will get rerendered upon loading of the
+    # notebook javascript.
+    thread = threading.Thread(target=_close_snack,
+                              args=(snack, duration))
+    thread.start()
