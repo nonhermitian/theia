@@ -20,7 +20,6 @@ import ipywidgets as wid
 from IPython.display import display, Javascript
 from IPython.core.magic import line_magic, Magics, magics_class
 from qiskit.tools.events.pubsub import Subscriber
-from qiskit.providers.ibmq import IBMQ
 from qiskit.exceptions import QiskitError
 from qiskit.providers.ibmq.job.exceptions import IBMQJobApiError
 from .job_widgets import (make_clear_button,
@@ -211,7 +210,7 @@ class IBMQDashboard(Subscriber):
                                            status.value)
             self.jobs.append(job_widget)
             _job_monitor(job, status, self)
-            
+
             if len(self.jobs) > 50:
                 self.clear_done()
             else:
@@ -281,6 +280,7 @@ class IBMQDashboardMagic(Magics):
     def ibmq_dashboard(self, line='', cell=None):
         """A Jupyter magic function to enable job watcher.
         """
+        from qiskit.providers.ibmq import IBMQ
         pro = IBMQ.providers()
         if not pro:
             try:

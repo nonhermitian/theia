@@ -31,7 +31,10 @@ def exception_widget(exc):
     """
     tback = traceback.TracebackException.from_exception(exc).format()
     trace_list = [string for string in tback if 'File' in string]
-    tback = trace_list[-1].split('\n')[0]
+    if any(trace_list):
+        tback = trace_list[-1].split('\n')[0]
+    else:
+        tback = ''
     exc_type = exc.__class__.__name__
     exc_msg = exc.args[0]
 
