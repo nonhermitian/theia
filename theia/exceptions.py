@@ -24,5 +24,5 @@ class SilentExit(SystemExit):
         self.__class__.__name__ = ''
 
     def __del__(self):
-        sys.stderr.close()
+        sys.stderr.flush()
         sys.stderr = sys.__stderr__
