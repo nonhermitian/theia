@@ -42,7 +42,8 @@ def message_widget(msg, kind='info', warning_kind=None, duration=5):
     Properties:
         msg (str): The warning string.
         kind (str): Kind of message ('info', 'success', or 'warning').
-        warning_kind (type): A warning type, e.g. ValueError.
+        warning_kind (type): A warning type, e.g. ValueError. This is used
+                             only if kind='warning'.
         duration (int): Duration of snackbar in seconds.
     """
     global _CURRENT_WARNING  #pylint: disable=global-statement
