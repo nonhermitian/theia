@@ -18,8 +18,7 @@ import time
 import ipyvuetify as vue
 from IPython.display import display
 
-_CURRENT_WARNING = None
-
+_CURRENT_MESSAGE = None
 
 INFO_COLOR = '#154890'
 SUCCESS_COLOR = '#008C5B'
@@ -46,11 +45,11 @@ def message_widget(msg, kind='info', warning_kind=None, duration=5):
                              only if kind='warning'.
         duration (int): Duration of snackbar in seconds.
     """
-    global _CURRENT_WARNING  #pylint: disable=global-statement
-    if _CURRENT_WARNING:
-        _CURRENT_WARNING.value = False
-        _CURRENT_WARNING.close()
-        _CURRENT_WARNING = None
+    global _CURRENT_MESSAGE  #pylint: disable=global-statement
+    if _CURRENT_MESSAGE:
+        _CURRENT_MESSAGE.value = False
+        _CURRENT_MESSAGE.close()
+        _CURRENT_MESSAGE = None
 
     if kind == 'info':
         color = INFO_COLOR
@@ -95,7 +94,7 @@ def message_widget(msg, kind='info', warning_kind=None, duration=5):
 
     snack_button.on_event('click', on_click)
 
-    _CURRENT_WARNING = snack
+    _CURRENT_MESSAGE = snack
     display(snack)
     # We need to close the snack via a thread otherwise if a
     # notebook is closed and then reopened (while still active)
