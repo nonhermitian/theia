@@ -21,13 +21,18 @@ from IPython.display import display
 _CURRENT_WARNING = None
 
 
+INFO_COLOR = '#154890'
+SUCCESS_COLOR = '#008C5B'
+WARNING_COLOR = '#EB8921'
+
+
 def _close_snack(snack, duration):
     """Closes a snackbar after the specified duration
     """
     time.sleep(duration)
     snack.close()
 
-def warning_widget(msg, duration=5):
+def message_widget(msg, kind='info', warning_kind=None, duration=5):
     """Makes a warning snackbar.
 
     Only one snackbar is allowed at a time, so only
@@ -44,15 +49,41 @@ def warning_widget(msg, duration=5):
         _CURRENT_WARNING.close()
         _CURRENT_WARNING = None
 
-    snack_button = vue.Btn(text=True, children=['close'],
-                           style_='color:#212121')
+    if kind == 'info':
+        color = INFO_COLOR
+        font_color = '#FFFFFF'
+        icon = 'info'
+    elif kind == 'success':
+        color = SUCCESS_COLOR
+        font_color = '#FFFFFF'
+        icon = 'info'
+    elif kind == 'warning':
+        color = WARNING_COLOR
+        font_color = '#212121'
+        icon = 'warning'
+    else:
+        raise ValueError('Invalid input kind for message.')
 
-    snack_icon = vue.Icon(children=['info'], style_='color:#212121; margin: 5px')
+    snack_button = vue.Btn(text=True, children=['close'],
+                           style_='color:{}'.format(font_color))
+
+    snack_icon = vue.Icon(children=['{}'.format(icon)],
+                          style_='color:{}; margin: 5px'.format(font_color))
+
+    if warning_kind:
+        warn_type_widget = vue.Html(tag='div',
+                                    children=[warning_kind.__name__+ ': '],
+                                    style_='font-weight: bold; color:{}; margin: 5px'.format(
+                                        font_color))
+
+        children = [snack_icon, warn_type_widget, msg, snack_button]
+    else:
+        children = [snack_icon, msg, snack_button]
 
     snack = vue.Snackbar(right=True, bottom=True, value=True,
-                         timeout=duration*1000, color='#F1C21B',
-                         children=[snack_icon, msg, snack_button],
-                         style_='color:#212121')
+                         timeout=duration*1000, color=color,
+                         children=children,
+                         style_='color:{}'.format(font_color))
 
     #pylint: disable=unused-argument
     def on_click(widget, event, data):

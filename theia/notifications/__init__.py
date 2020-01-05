@@ -16,4 +16,4 @@
 """
 
 from .exceptions import exception_widget
-from .warnings import warning_widget
+from .messages import message_widget
