@@ -27,7 +27,7 @@ WARNING_COLOR = '#EB8921'
 
 
 def _close_snack(snack, duration):
-    """Closes a snackbar after the specified duration
+    """Closes a snackbar after the specified duration.
     """
     time.sleep(duration)
     snack.close()
@@ -41,6 +41,8 @@ def message_widget(msg, kind='info', warning_kind=None, duration=5):
 
     Properties:
         msg (str): The warning string.
+        kind (str): Kind of message ('info', 'success', or 'warning').
+        warning_kind (type): A warning type, e.g. ValueError.
         duration (int): Duration of snackbar in seconds.
     """
     global _CURRENT_WARNING  #pylint: disable=global-statement
