@@ -73,8 +73,8 @@ def message_widget(msg, kind='info', warning_kind=None, duration=5):
     if warning_kind:
         warn_type_widget = vue.Html(tag='div',
                                     children=[warning_kind.__name__+ ': '],
-                                    style_='font-weight: bold; color:{}; margin: 5px'.format(
-                                        font_color))
+                                    style_='font-weight: bold; color:{}; '
+                                           'margin: 0px 5px 0px 0px'.format(font_color))
 
         children = [snack_icon, warn_type_widget, msg, snack_button]
     else:
