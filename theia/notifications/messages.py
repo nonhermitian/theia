@@ -31,7 +31,7 @@ def _close_snack(snack, duration):
     time.sleep(duration)
     snack.close()
 
-def message_widget(msg, kind='info', warning_kind=None, duration=5):
+def message_widget(msg, kind='info', warning_kind=UserWarning, duration=5):
     """Makes a warning snackbar.
 
     Only one snackbar is allowed at a time, so only
@@ -41,7 +41,7 @@ def message_widget(msg, kind='info', warning_kind=None, duration=5):
     Properties:
         msg (str): The warning string.
         kind (str): Kind of message ('info', 'success', or 'warning').
-        warning_kind (type): A warning type, e.g. ValueError. This is used
+        warning_kind (type): A warning type, e.g. UserWarning. This is used
                              only if kind='warning'.
         duration (int): Duration of snackbar in seconds.
     """
@@ -72,7 +72,7 @@ def message_widget(msg, kind='info', warning_kind=None, duration=5):
     snack_icon = vue.Icon(children=['{}'.format(icon)],
                           style_='color:{}; margin: 5px'.format(font_color))
 
-    if warning_kind:
+    if kind == 'warning':
         warn_type_widget = vue.Html(tag='div',
                                     children=[warning_kind.__name__+ ': '],
                                     style_='font-weight: bold; color:{}; '
