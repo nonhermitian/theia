@@ -65,6 +65,7 @@ class IBMQDashboard(Subscriber):
         self.refresh_jobs_board()
 
     def _get_backends(self):
+        from qiskit import IBMQ
         ibmq_backends = {}
         for pro in IBMQ.providers():
             pro_name = "{hub}/{group}/{project}".format(hub=pro.credentials.hub,
@@ -280,7 +281,7 @@ class IBMQDashboardMagic(Magics):
     def ibmq_dashboard(self, line='', cell=None):
         """A Jupyter magic function to enable job watcher.
         """
-        from qiskit.providers.ibmq import IBMQ
+        from qiskit import IBMQ
         pro = IBMQ.providers()
         if not pro:
             try:
