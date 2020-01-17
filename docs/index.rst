@@ -13,14 +13,24 @@ Theia documentation
 
     .. container:: header
 
-       **Solution to problem 1.1.1**
+       **An accordion with a movie**
 
-    Here we do some math :math:`\sin(\omega t)`, and do some more
-    on a new line:
+    .. image:: images/depth_movie.gif
 
-    .. math::
+Interactive widgets
 
-       \frac{ \sum_{t=0}^{N}f(t,k) }{N}
+.. jupyter-execute::
+    :hide-code:
+
+    from qiskit import IBMQ
+    from theia.visualization import iplot_error_map
+
+    IBMQ.load_account()
+
+    provider = IBMQ.get_provider(group='open', project='main')
+    backend = provider.get_backend('ibmq_vigo')
+
+    iplot_error_map(backend)
 
 .. Hiding - Indices and tables
    :ref:`genindex`
