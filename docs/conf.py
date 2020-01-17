@@ -149,3 +149,6 @@ html_theme_options = {
 }
 
 autoclass_content = 'both'
+
+def setup(app):
+    app.add_stylesheet('custom.css')
