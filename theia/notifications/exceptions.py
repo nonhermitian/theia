@@ -58,13 +58,14 @@ def exception_widget(exc):
                                                     'margin: 0px 5px'
                                             ),
                                     exc_type],
-                          style_='height:50px;'
+                          style_='height:35px;'
                                  'background-color:#AA0114;'
-                                 'color:#ffffff'
+                                 'color:#ffffff;'
+                                 'padding: 0px 10px'
                          )
     subtitle = vue.CardSubtitle(children=[exc_msg],
                                 class_='text--primary body-1 fontweight-medium',
-                                style_="margin: 10px 0px; color:#212121"
+                                style_="margin: 0px 0px; color:#212121"
                                )
     children = [title, subtitle]
 
@@ -77,7 +78,6 @@ def exception_widget(exc):
 
     exc_card = vue.Card(children=children,
                         style_='height: auto; min-height: 100px;',
-                        flat=True
                         )
     display(exc_card)
     raise SilentExit
