@@ -13,20 +13,24 @@
 # that they have been altered from the originals.
 
 import datetime
+from ..notifications.exceptions import exception_widget
 
-def utc_to_local(utc_str):
-    """Takes a string representing UTC time and
-    converts it to the local time.
+def utc_to_local(utc_dt):
+    """Takes a UTC datetime object or string and
+    converts it to a local timezone datetime.
 
     Parameters:
-        utc_str (str): Input UTC time string.
+        utc_dt (datetime or str): Input UTC datetime.
 
     Returns:
-        str: Input time expressed in local timezone.
+        datetime: Local date and time.
     """
-    utc_dt = datetime.datetime.strptime(utc_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+    if isinstance(utc_dt, str):
+        utc_dt = datetime.datetime.strptime(utc_dt, '%Y-%m-%dT%H:%M:%S.%fZ')
+    if not isinstance(utc_dt, datetime.datetime):
+        exception_widget(TypeError('Input is not string or datetime.'))
     utc_dt = utc_dt.replace(tzinfo=datetime.timezone.utc)
     local_tz = datetime.datetime.now().astimezone().tzinfo
     local_tz_name = local_tz.tzname(None)
     local_dt = utc_dt.astimezone(local_tz)
-    return local_dt.strftime("%Y-%m-%dT%H:%M:%S {}".format(local_tz_name))
+    return local_dt

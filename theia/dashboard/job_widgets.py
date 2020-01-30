@@ -57,15 +57,14 @@ def make_labels():
     labels0 = widgets.HTML(value="<h5>Job ID</h5>",
                            layout=widgets.Layout(width='190px'))
     labels1 = widgets.HTML(value='<h5>Backend</h5>',
-                           layout=widgets.Layout(width='145px'))
+                           layout=widgets.Layout(width='165px'))
     labels2 = widgets.HTML(value='<h5>Status</h5>',
-                           layout=widgets.Layout(width='95px'))
-    labels3 = widgets.HTML(value='<h5>Queue</h5>',
-                           layout=widgets.Layout(width='70px'))
-    labels4 = widgets.HTML(value='<h5>Message</h5>')
+                           layout=widgets.Layout(width='125px'))
+    labels3 = widgets.HTML(value='<h5>Est. Time</h5>',
+                           layout=widgets.Layout(width='100px'))
 
-    labels = widgets.HBox(children=[labels0, labels1, labels2, labels3, labels4],
-                          layout=widgets.Layout(width='600px',
+    labels = widgets.HBox(children=[labels0, labels1, labels2, labels3],
+                          layout=widgets.Layout(width='700px',
                                                 margin='0px 0px 0px 35px'))
     return labels
 
@@ -89,18 +88,15 @@ def create_job_widget(watcher, job, backend, status='', queue_pos=None, msg=''):
     id_label = widgets.HTML(value="{}".format(job_id),
                             layout=widgets.Layout(width='190px'))
     backend_label = widgets.HTML(value="{}".format(backend),
-                                 layout=widgets.Layout(width='145px'))
+                                 layout=widgets.Layout(width='165px'))
     status_label = widgets.HTML(value="{}".format(status),
-                                layout=widgets.Layout(width='95px'))
+                                layout=widgets.Layout(width='125px'))
     if queue_pos is None:
         queue_pos = '-'
     else:
         queue_pos = str(queue_pos)
     queue_label = widgets.HTML(value="{}".format(queue_pos),
-                               layout=widgets.Layout(width='70px'))
-
-    msg_label = widgets.HTML(value="<p style=white-space:nowrap;>{}</p>".format(msg),
-                             layout=widgets.Layout(overflow_x='scroll'))
+                               layout=widgets.Layout(width='125px'))
 
     close_button = widgets.Button(button_style='', icon='close',
                                   layout=widgets.Layout(width='30px',
@@ -112,9 +108,9 @@ def create_job_widget(watcher, job, backend, status='', queue_pos=None, msg=''):
     close_button.on_click(cancel_on_click)
 
     job_grid = widgets.HBox(children=[close_button, id_label, backend_label,
-                                      status_label, queue_label, msg_label],
-                            layout=widgets.Layout(min_width='700px',
-                                                  max_width='700px'))
+                                      status_label, queue_label],
+                            layout=widgets.Layout(min_width='690px',
+                                                  max_width='690px'))
     job_grid.job_id = job_id
     job_grid.job = job
     return job_grid

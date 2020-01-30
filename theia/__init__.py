@@ -24,9 +24,9 @@ that extend the functionality of Qiskit.
 
 """
 from IPython import get_ipython # pylint: disable=import-error
-from .dashboard.dashboard import IBMQDashboardMagic
+from .dashboard.dashboard import IQXDashboardMagic
 from .version import __version__
 
 _IP = get_ipython()
 if _IP is not None:
-    _IP.register_magics(IBMQDashboardMagic)
+    _IP.register_magics(IQXDashboardMagic)

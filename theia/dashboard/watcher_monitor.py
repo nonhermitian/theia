@@ -16,6 +16,7 @@
 import sys
 import time
 import threading
+from ..date_utils.converters import utc_to_local
 
 
 def _job_monitor(job, status, watcher):
@@ -53,9 +54,10 @@ def _job_checker(job, status, watcher):
             if status.name == 'QUEUED':
                 queue_pos = job.queue_position()
                 if queue_pos != prev_queue_pos:
+                    est_time = utc_to_local(job.queue_info().estimated_start_time)
 
-                    update_info = (job.job_id(), status.name,
-                                   queue_pos, status.value)
+                    update_info = (job.job_id(), status.name+' ({})'.format(queue_pos),
+                                   est_time.strftime("%H:%M %Z (%m/%d)"), status.value)
 
                     watcher.update_single_job(update_info)
                     if queue_pos is not None:

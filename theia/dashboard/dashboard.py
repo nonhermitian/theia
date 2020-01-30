@@ -50,8 +50,8 @@ def _add_device_to_list(backend, device_list):
     device_list.children = list(device_list.children) + [device_pane]
 
 
-class IBMQDashboard(Subscriber):
-    """An IBM Q job watcher.
+class IQXDashboard(Subscriber):
+    """An IQX dashboard.
     """
     def __init__(self):
         super().__init__()
@@ -152,8 +152,6 @@ class IBMQDashboard(Subscriber):
             else:
                 queue = str(update_info[2])
             job_wid.children[4].value = queue
-            # update msg
-            job_wid.children[5].value = update_info[3]
 
     def cancel_job(self, job_id):
         """Cancels a job in the watcher
@@ -230,7 +228,7 @@ def build_dashboard_widget():
                    )
 
     devices = wid.VBox(children=[],
-                       layout=wid.Layout(width='700px',
+                       layout=wid.Layout(width='740px',
                                          height='100%')
                        )
 
@@ -239,8 +237,8 @@ def build_dashboard_widget():
                                                                 )
                          )
 
-    jobs_box = wid.VBox(layout=wid.Layout(max_width='710px',
-                                          min_width='710px',
+    jobs_box = wid.VBox(layout=wid.Layout(max_width='740px',
+                                          min_width='740px',
                                           justify_content='flex-start'))
     tabs.children = [device_list, jobs_box]
     tabs.set_title(0, 'Devices')
@@ -254,7 +252,7 @@ def build_dashboard_widget():
 
     acc._device_list = acc.children[0].children[0].children[0]
 
-    acc.set_title(0, 'IBMQ Dashboard')
+    acc.set_title(0, 'IQX Dashboard')
     acc.selected_index = None
     acc.layout.visibility = 'hidden'
     display(acc)
@@ -274,11 +272,11 @@ def build_dashboard_widget():
     return acc
 
 @magics_class
-class IBMQDashboardMagic(Magics):
+class IQXDashboardMagic(Magics):
     """A class for enabling/disabling the job watcher.
     """
     @line_magic
-    def ibmq_dashboard(self, line='', cell=None):
+    def iqx_dashboard(self, line='', cell=None):
         """A Jupyter magic function to enable job watcher.
         """
         from qiskit import IBMQ
@@ -292,16 +290,16 @@ class IBMQDashboardMagic(Magics):
                 pro = IBMQ.providers()
                 if not pro:
                     raise QiskitError("No providers found.  Must load your IBMQ account.")
-        _IBMQ_DASHBOARD.stop_dashboard()
-        _IBMQ_DASHBOARD.start_dashboard()
+        _IQX_DASHBOARD.stop_dashboard()
+        _IQX_DASHBOARD.start_dashboard()
 
     @line_magic
     def disable_ibmq_dashboard(self, line='', cell=None):
         """A Jupyter magic function to disable job watcher.
         """
-        _IBMQ_DASHBOARD.stop_dashboard()
+        _IQX_DASHBOARD.stop_dashboard()
 
 
 
 # The Jupyter IBMQ dashboard instance
-_IBMQ_DASHBOARD = IBMQDashboard()
+_IQX_DASHBOARD = IQXDashboard()
