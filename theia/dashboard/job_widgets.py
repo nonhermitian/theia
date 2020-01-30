@@ -60,7 +60,7 @@ def make_labels():
                            layout=widgets.Layout(width='165px'))
     labels2 = widgets.HTML(value='<h5>Status</h5>',
                            layout=widgets.Layout(width='125px'))
-    labels3 = widgets.HTML(value='<h5>Est. Time</h5>',
+    labels3 = widgets.HTML(value='<h5>Est. Start Time</h5>',
                            layout=widgets.Layout(width='100px'))
 
     labels = widgets.HBox(children=[labels0, labels1, labels2, labels3],
