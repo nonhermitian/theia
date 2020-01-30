@@ -48,7 +48,7 @@ def provider_buttons(providers):
     for pro in providers:
         button = wid.Box(children=[vue.Btn(color='#f5f5f5', small=True,
                                            children=[pro],
-                                           style_="font-family: Arial, sans-serif")],
+                                           style_="font-family: Arial, sans-serif; font-size:10px;")],
                          layout=wid.Layout(margin="0px 0px 2px 0px",
                                            width='350px'))
 
