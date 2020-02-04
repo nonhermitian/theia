@@ -19,14 +19,15 @@ import numpy as np
 from qiskit.visualization.counts_visualization import (_plot_histogram_data,
                                                        VALID_SORTS, DIST_MEAS)
 import plotly.graph_objects as go
-from .plotly_wrapper import PlotlyWidget
+from .plotly_wrapper import PlotlyWidget, PlotlyFigure
 
 
 def iplot_histogram(data, figsize=(None, None), color=None,
                     number_to_keep=None,
                     sort='asc', target_string=None,
                     legend=None, bar_labels=True,
-                    title=None, background_color='white'):
+                    title=None, background_color='white',
+                    as_widget=False):
     """Interactive histogram plot of counts data.
 
     Args:
@@ -45,9 +46,10 @@ def iplot_histogram(data, figsize=(None, None), color=None,
         title (str): A string to use for the plot title.
         background_color (str): Set the background color to 'white'
                                 or 'black'.
+        as_widget (bool): Return figure as an ipywidget.
 
     Returns:
-        PlotlyFigureWrapper:
+        PlotlyFigure or PlotlyWidget:
             A figure for the rendered histogram.
 
     Raises:
@@ -167,5 +169,7 @@ def iplot_histogram(data, figsize=(None, None), color=None,
                       title_font_size=20,
                       font=dict(color=text_color),
                      )
+    if as_widget:
+        return PlotlyWidget(fig)
 
-    return PlotlyWidget(fig)
+    return PlotlyFigure(fig)

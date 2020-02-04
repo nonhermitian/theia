@@ -13,6 +13,7 @@
 # that they have been altered from the originals.
 
 import datetime
+import dateutil
 from ..notifications.exceptions import exception_widget
 
 def utc_to_local(utc_dt):
@@ -26,11 +27,10 @@ def utc_to_local(utc_dt):
         datetime: Local date and time.
     """
     if isinstance(utc_dt, str):
-        utc_dt = datetime.datetime.strptime(utc_dt, '%Y-%m-%dT%H:%M:%S.%fZ')
+        utc_dt = dateutil.parser.parse(utc_dt)
     if not isinstance(utc_dt, datetime.datetime):
         exception_widget(TypeError('Input is not string or datetime.'))
     utc_dt = utc_dt.replace(tzinfo=datetime.timezone.utc)
     local_tz = datetime.datetime.now().astimezone().tzinfo
-    local_tz_name = local_tz.tzname(None)
     local_dt = utc_dt.astimezone(local_tz)
     return local_dt

@@ -21,15 +21,16 @@ import seaborn as sns
 import matplotlib as mpl
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from .plotly_wrapper import PlotlyWidget
+from .plotly_wrapper import PlotlyWidget, PlotlyFigure
 from.device_layouts import DEVICE_LAYOUTS
-from .colormaps import HELIX_LIGHT, HELIX_DARK
+from .colormaps import HELIX_LIGHT, HELIX_LIGHT_CMAP, HELIX_DARK, HELIX_DARK_CMAP
 
 
 def iplot_error_map(backend, figsize=(700, 500),
                     show_title=True,
                     remove_badcal_edges=True,
-                    background_color='white'):
+                    background_color='white',
+                    as_widget=False):
     """Plots the gate map of a device.
 
     Parameters:
@@ -40,6 +41,7 @@ def iplot_error_map(backend, figsize=(700, 500),
                                     data.
         background_color (str): Set the background color to 'white'
                                 or 'black'.
+        as_widget (bool): Return figure as a ipywidget.
 
     Returns:
         PlotlyFigure: The output figure.
@@ -61,13 +63,13 @@ def iplot_error_map(backend, figsize=(700, 500),
 
            iplot_error_map(backend)
     """
+    meas_text_color = '#FFFFFF'
     if background_color == 'white':
-        color_map = sns.cubehelix_palette(reverse=True, as_cmap=True)
+        color_map = HELIX_LIGHT_CMAP
         text_color = '#000000'
         plotly_cmap = HELIX_LIGHT
     elif background_color == 'black':
-        color_map = sns.cubehelix_palette(dark=0.25, light=0.97,
-                                          reverse=True, as_cmap=True)
+        color_map = HELIX_DARK_CMAP
         text_color = '#FFFFFF'
         plotly_cmap = HELIX_DARK
     else:
@@ -314,10 +316,12 @@ def iplot_error_map(backend, figsize=(700, 500),
                      range=_range)
 
     # H error rate colorbar
-    fig.append_trace(go.Heatmap(z=[np.linspace(min(single_gate_errors),
-                                               max(single_gate_errors), 100),
-                                   np.linspace(min(single_gate_errors),
-                                               max(single_gate_errors), 100)],
+    min_1q_err = min(single_gate_errors)
+    max_1q_err = max(single_gate_errors)
+    fig.append_trace(go.Heatmap(z=[np.linspace(min_1q_err,
+                                               max_1q_err, 100),
+                                   np.linspace(min_1q_err,
+                                               max_1q_err, 100)],
                                 colorscale=plotly_cmap,
                                 showscale=False,
                                 hoverinfo='none'), row=2, col=1)
@@ -329,35 +333,40 @@ def iplot_error_map(backend, figsize=(700, 500),
     fig.update_xaxes(row=2,
                      col=1,
                      tickvals=[0, 49, 99],
-                     ticktext=[np.round(min(single_gate_errors), 3),
-                               np.round(max(single_gate_errors)- min(single_gate_errors), 3),
-                               np.round(max(single_gate_errors), 3)])
+                     ticktext=[np.round(min_1q_err, 3),
+                               np.round((max_1q_err-min_1q_err)/2+min_1q_err, 3),
+                               np.round(max_1q_err, 3)])
 
     # CX error rate colorbar
+    min_cx_err = min(cx_errors)
+    max_cx_err = max(cx_errors)
     if cmap:
-        fig.append_trace(go.Heatmap(z=[np.linspace(min(cx_errors),
-                                                   max(cx_errors), 100),
-                                       np.linspace(min(cx_errors),
-                                                   max(cx_errors), 100)],
+        fig.append_trace(go.Heatmap(z=[np.linspace(min_cx_err,
+                                                   max_cx_err, 100),
+                                       np.linspace(min_cx_err,
+                                                   max_cx_err, 100)],
                                     colorscale=plotly_cmap,
                                     showscale=False,
                                     hoverinfo='none'), row=2, col=7)
 
         fig.update_yaxes(row=2, col=7, visible=False)
 
+        min_cx_idx_err = min(cx_errors[cx_idx])
+        max_cx_idx_err = max(cx_errors[cx_idx])
         fig.update_xaxes(row=2, col=7,
                          tickvals=[0, 49, 99],
-                         ticktext=[np.round(min(cx_errors[cx_idx]), 3),
-                                   np.round(max(cx_errors[cx_idx])-min(cx_errors[cx_idx]), 3),
-                                   np.round(max(cx_errors[cx_idx]), 3)])
+                         ticktext=[np.round(min_cx_idx_err, 3),
+                                   np.round((max_cx_idx_err-min_cx_idx_err)/2+min_cx_idx_err, 3),
+                                   np.round(max_cx_idx_err, 3)])
 
     hover_text = "<b>Qubit {}</b><br>M<sub>err</sub> = {} %"
     # Add the left side meas errors
     for kk in range(num_left-1, -1, -1):
         fig.append_trace(go.Bar(x=[read_err[kk]], y=[kk],
                                 orientation='h',
-                                marker=dict(color='#DDBBBA'),
+                                marker=dict(color='#b385e2'),
                                 hoverinfo="text",
+                                hoverlabel=dict(font=dict(color=meas_text_color)),
                                 hovertext=[hover_text.format(kk,
                                                              np.round(read_err[kk], 3)
                                                              )]
@@ -392,8 +401,9 @@ def iplot_error_map(backend, figsize=(700, 500),
             fig.append_trace(go.Bar(x=[-read_err[kk]],
                                     y=[kk],
                                     orientation='h',
-                                    marker=dict(color='#DDBBBA'),
+                                    marker=dict(color='#b385e2'),
                                     hoverinfo="text",
+                                    hoverlabel=dict(font=dict(color=meas_text_color)),
                                     hovertext=[hover_text.format(kk,
                                                                  np.round(read_err[kk], 3))]
                                    ), row=1, col=9)
@@ -439,5 +449,6 @@ def iplot_error_map(backend, figsize=(700, 500),
                       font=dict(color=text_color),
                       margin=dict(t=60, l=0, r=0, b=0)
                      )
-
-    return PlotlyWidget(fig)
+    if as_widget:
+        return PlotlyWidget(fig)
+    return PlotlyFigure(fig)

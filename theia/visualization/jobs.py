@@ -66,15 +66,15 @@ def job_summary(backend):
 
     for job in jobs:
         _date = utc_to_local(job.creation_date())
-        _year = _date[:4]
+        _year = _date.year
         if _year not in jobs_dates.keys():
             jobs_dates[_year] = {}
 
-        _month = _date[5:7]
+        _month = _date.month
         if _month not in jobs_dates[_year].keys():
             jobs_dates[_year][_month] = {}
 
-        _day = _date[8:10]
+        _day = _date.day
         if _day not in jobs_dates[_year][_month].keys():
             jobs_dates[_year][_month][_day] = 0
 
@@ -110,7 +110,7 @@ def job_summary(backend):
             #Do the days
             day_counter = 0
             for day_num, day_jobs in val.items():
-                _day_num = day_num
+                _day_num = str(day_num)
                 if _day_num[0] == '0':
                     _day_num = _day_num[1:]
 
